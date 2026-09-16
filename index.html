@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador Auditor Fiscal — Auditor Fiscal Federal</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="folder">
+
+  <header class="tab-bar">
+    <div class="tab-bar__left">
+      <span class="stamp-mark">⚖</span>
+      <div class="tab-bar__title">
+        <h1>Simulador Auditor Fiscal</h1>
+        <p>Concurso: Auditor Fiscal Federal</p>
+      </div>
+    </div>
+    <div class="tab-bar__proto" id="protoNumber">PROCESSO Nº —</div>
+  </header>
+
+  <main id="app">
+
+    <!-- TELA 1: CONFIGURAÇÃO -->
+    <section id="screen-setup" class="screen">
+      <div class="dossier">
+        <p class="dossier__eyebrow">Abertura de processo</p>
+        <h2>Configurar simulado</h2>
+
+        <div class="field-row">
+          <label for="qtdQuestoes">Quantidade de questões</label>
+          <input type="number" id="qtdQuestoes" min="5" max="60" value="25">
+        </div>
+
+        <div class="field-row">
+          <label for="disciplinaSelect">Disciplina</label>
+          <select id="disciplinaSelect">
+            <option value="Misto" selected>Misto (todas as disciplinas)</option>
+            <option value="Direito Tributário">Direito Tributário</option>
+            <option value="Contabilidade Geral e Avançada">Contabilidade Geral e Avançada</option>
+            <option value="Legislação Tributária">Legislação Tributária (Federal, Estadual ou Municipal)</option>
+            <option value="Auditoria">Auditoria (Fiscal e Governamental)</option>
+            <option value="Tecnologia da Informação e Análise de Dados">Tecnologia da Informação e Análise de Dados</option>
+            <option value="Língua Portuguesa">Língua Portuguesa</option>
+            <option value="Administração Financeira e Orçamentária">Administração Financeira e Orçamentária (AFO)</option>
+            <option value="Direito Administrativo">Direito Administrativo</option>
+            <option value="Direito Constitucional">Direito Constitucional</option>
+            <option value="Raciocínio Lógico-Matemático e Estatística">Raciocínio Lógico-Matemático e Estatística</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <span class="field-row__label">Formato da questão</span>
+          <div class="toggle-group" role="radiogroup">
+            <button type="button" class="toggle-option is-active" data-formato="multipla_escolha">Múltipla escolha (A–E)</button>
+            <button type="button" class="toggle-option" data-formato="certo_errado">Certo / Errado</button>
+          </div>
+        </div>
+
+        <button id="btnIniciar" class="btn-primary">Abrir processo e iniciar simulado</button>
+        <p class="dossier__note">O nível inicial é <strong>Médio</strong>. A partir da 3ª questão, o nível se ajusta automaticamente conforme seu desempenho acumulado.</p>
+      </div>
+    </section>
+
+    <!-- TELA 2: QUESTÃO -->
+    <section id="screen-question" class="screen" hidden>
+      <div class="progress-bar">
+        <div class="progress-bar__fill" id="progressFill"></div>
+      </div>
+
+      <div class="question-card" id="questionCard">
+        <div class="question-card__loading" id="questionLoading">
+          <span class="spinner"></span>
+          <p id="loadingText">Lavrando o auto de questão…</p>
+        </div>
+
+        <div id="questionContent" hidden>
+          <div class="question-meta">
+            <span class="meta-chip" id="metaDisciplina">—</span>
+            <span class="meta-chip" id="metaAssunto">—</span>
+            <span class="meta-chip meta-chip--level" id="metaNivel">—</span>
+            <span class="meta-chip meta-chip--origem" id="metaOrigem">—</span>
+          </div>
+
+          <div class="question-seal" id="questionSeal">Q. <span id="questionIndex">1</span></div>
+
+          <p class="question-enunciado" id="questionEnunciado"></p>
+
+          <div class="alternativas" id="alternativasContainer"></div>
+
+          <button id="btnResponder" class="btn-primary" disabled>Confirmar resposta</button>
+
+          <div class="feedback" id="feedbackPanel" hidden>
+            <div class="feedback__verdict" id="feedbackVerdict"></div>
+            <div class="feedback__block">
+              <h3>Análise das alternativas</h3>
+              <ul id="feedbackAlternativas"></ul>
+            </div>
+            <div class="feedback__block">
+              <h3>A pegadinha</h3>
+              <p id="feedbackPegadinha"></p>
+            </div>
+            <div class="feedback__block">
+              <h3>Ponto de memorização</h3>
+              <p id="feedbackMemorizacao"></p>
+            </div>
+            <div class="feedback__block feedback__block--erro" id="feedbackCausaWrap" hidden>
+              <h3>Causa provável do erro</h3>
+              <p id="feedbackCausa">Apurando causa…</p>
+            </div>
+            <button id="btnProxima" class="btn-primary">Próxima questão →</button>
+          </div>
+        </div>
+
+        <div id="questionError" class="question-error" hidden>
+          <h3>Não foi possível gerar a questão</h3>
+          <p id="questionErrorMsg"></p>
+          <button id="btnTentarNovamente" class="btn-secondary">Tentar novamente</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TELA 3: RELATÓRIO -->
+    <section id="screen-report" class="screen" hidden>
+      <div class="dossier">
+        <p class="dossier__eyebrow">Encerramento do processo</p>
+        <h2>Relatório de auditoria de desempenho</h2>
+
+        <div class="report-summary">
+          <div class="report-summary__score">
+            <span id="reportScorePct">0%</span>
+            <small id="reportScoreFrac">0/0 acertos</small>
+          </div>
+          <p id="reportDiagnostico" class="report-diagnostico"></p>
+        </div>
+
+        <h3 class="report-heading">Desempenho por disciplina</h3>
+        <div id="reportPorDisciplina" class="ledger"></div>
+
+        <h3 class="report-heading">Mapa de erros por assunto</h3>
+        <div id="reportMapaErros" class="ledger ledger--erros"></div>
+
+        <div class="report-columns">
+          <div>
+            <h3 class="report-heading">Pontos fortes</h3>
+            <ul id="reportPontosFortes" class="bullet-list bullet-list--forte"></ul>
+          </div>
+          <div>
+            <h3 class="report-heading">Pontos fracos</h3>
+            <ul id="reportPontosFracos" class="bullet-list bullet-list--fraco"></ul>
+          </div>
+        </div>
+
+        <h3 class="report-heading">Plano de revisão</h3>
+        <div class="plano-revisao">
+          <div class="plano-revisao__item">
+            <span class="plano-revisao__label">Imediato</span>
+            <p id="planoImediato"></p>
+          </div>
+          <div class="plano-revisao__item">
+            <span class="plano-revisao__label">Próximos dias</span>
+            <p id="planoProximosDias"></p>
+          </div>
+          <div class="plano-revisao__item">
+            <span class="plano-revisao__label">Manutenção</span>
+            <p id="planoManutencao"></p>
+          </div>
+        </div>
+
+        <button id="btnNovoSimulado" class="btn-primary">Abrir novo processo</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
