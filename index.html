@@ -1,185 +1,162 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulador Auditor Fiscal — Auditor Fiscal Federal</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador Auditor Fiscal</title>
+  <meta name="description" content="Simulados inteligentes e adaptativos para Auditor Fiscal — Federal, Estadual e Municipal." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%231e2a26' stroke='%23c08a2b' stroke-width='4'/%3E%3Ctext x='32' y='41' font-family='monospace' font-weight='700' font-size='24' text-anchor='middle' fill='%23c08a2b'%3EAF%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-<div class="folder">
-
-  <header class="tab-bar">
-    <div class="tab-bar__left">
-      <span class="stamp-mark">⚖</span>
-      <div class="tab-bar__title">
-        <h1>Simulador Auditor Fiscal</h1>
-        <p>Concurso: Auditor Fiscal Federal</p>
+  <header class="topo">
+    <div class="topo-inner">
+      <div class="marca">
+        <span class="selo" aria-hidden="true">AF</span>
+        <div>
+          <h1>Simulador Auditor Fiscal</h1>
+          <p class="sub">Livro-razão de estudos · Federal · Estadual · Municipal</p>
+        </div>
       </div>
+      <button id="btn-encerrar" class="btn-link hidden" type="button">Encerrar e ver relatório</button>
     </div>
-    <div class="tab-bar__proto" id="protoNumber">PROCESSO Nº —</div>
   </header>
 
-  <main id="app">
+  <main class="folha">
+    <!-- ===================== TELA INICIAL ===================== -->
+    <section id="tela-inicio" class="tela">
+      <div class="cabecalho-tela">
+        <span class="rotulo-mono">Lançamento nº 001</span>
+        <h2>Abrir novo simulado</h2>
+        <p>Questões geradas uma a uma, com dificuldade que se ajusta ao seu desempenho e assuntos sorteados a partir da ementa.</p>
+      </div>
 
-    <!-- TELA 1: CONFIGURAÇÃO -->
-    <section id="screen-setup" class="screen">
-      <div class="dossier">
-        <p class="dossier__eyebrow">Abertura de processo</p>
-        <h2>Configurar simulado</h2>
+      <form id="form-config" class="grade-form" autocomplete="off">
+        <label class="campo">
+          <span class="rotulo-mono">Quantidade de questões</span>
+          <input id="cfg-qtd" type="number" min="5" max="80" step="1" value="25" required />
+        </label>
 
-        <div class="field-row">
-          <label for="qtdQuestoes">Quantidade de questões</label>
-          <input type="number" id="qtdQuestoes" min="5" max="60" value="25">
-        </div>
-
-        <div class="field-row">
-          <label for="disciplinaSelect">Disciplina</label>
-          <select id="disciplinaSelect">
-            <option value="Misto" selected>Misto (todas as disciplinas)</option>
-            <option value="Direito Tributário">Direito Tributário</option>
-            <option value="Contabilidade Geral e Avançada">Contabilidade Geral e Avançada</option>
-            <option value="Legislação Tributária">Legislação Tributária (Federal, Estadual ou Municipal)</option>
-            <option value="Auditoria">Auditoria (Fiscal e Governamental)</option>
-            <option value="Tecnologia da Informação e Análise de Dados">Tecnologia da Informação e Análise de Dados</option>
-            <option value="Língua Portuguesa">Língua Portuguesa</option>
-            <option value="Administração Financeira e Orçamentária">Administração Financeira e Orçamentária (AFO)</option>
-            <option value="Direito Administrativo">Direito Administrativo</option>
-            <option value="Direito Constitucional">Direito Constitucional</option>
-            <option value="Raciocínio Lógico-Matemático e Estatística">Raciocínio Lógico-Matemático e Estatística</option>
+        <label class="campo">
+          <span class="rotulo-mono">Esfera</span>
+          <select id="cfg-esfera">
+            <option value="Federal">Federal (RFB)</option>
+            <option value="Estadual">Estadual (ICMS)</option>
+            <option value="Municipal">Municipal (ISS)</option>
           </select>
-        </div>
+          <small>Define o conteúdo de Legislação Tributária.</small>
+        </label>
 
-        <div class="field-row">
-          <span class="field-row__label">Formato da questão</span>
-          <div class="toggle-group" role="radiogroup">
-            <button type="button" class="toggle-option is-active" data-formato="multipla_escolha">Múltipla escolha (A–E)</button>
-            <button type="button" class="toggle-option" data-formato="certo_errado">Certo / Errado</button>
+        <label class="campo">
+          <span class="rotulo-mono">Banca de referência</span>
+          <select id="cfg-banca">
+            <option value="FGV">FGV</option>
+            <option value="Cebraspe">Cebraspe</option>
+            <option value="FCC">FCC</option>
+            <option value="Cesgranrio">Cesgranrio</option>
+          </select>
+        </label>
+
+        <fieldset class="campo">
+          <span class="rotulo-mono">Formato</span>
+          <div class="alternador" role="radiogroup">
+            <label><input type="radio" name="cfg-formato" value="ME" checked /> <span>Múltipla escolha (A–E)</span></label>
+            <label><input type="radio" name="cfg-formato" value="CE" /> <span>Certo / Errado</span></label>
           </div>
-        </div>
+        </fieldset>
 
-        <button id="btnIniciar" class="btn-primary">Abrir processo e iniciar simulado</button>
-        <p class="dossier__note">O nível inicial é <strong>Médio</strong>. A partir da 3ª questão, o nível se ajusta automaticamente conforme seu desempenho acumulado.</p>
-      </div>
+        <label class="campo largo">
+          <span class="rotulo-mono">Disciplina</span>
+          <select id="cfg-disc"></select>
+        </label>
+
+        <label class="campo largo hidden" id="campo-assunto">
+          <span class="rotulo-mono">Assunto</span>
+          <select id="cfg-assunto"></select>
+        </label>
+
+        <label class="campo largo checagem" id="campo-compl">
+          <input type="checkbox" id="cfg-compl" />
+          <span>Incluir disciplinas complementares no modo Misto (aparecem com menor frequência)</span>
+        </label>
+
+        <div class="largo pesos" id="tabela-pesos"></div>
+
+        <div class="largo acoes">
+          <button type="submit" class="btn-primario">Iniciar simulado</button>
+          <button type="button" id="btn-limpar-hist" class="btn-link">Zerar histórico deste navegador</button>
+        </div>
+      </form>
     </section>
 
-    <!-- TELA 2: QUESTÃO -->
-    <section id="screen-question" class="screen" hidden>
-      <div class="progress-bar">
-        <div class="progress-bar__fill" id="progressFill"></div>
+    <!-- ===================== TELA QUESTÃO ===================== -->
+    <section id="tela-questao" class="tela hidden">
+      <div class="barra-progresso" aria-hidden="true"><div id="progresso-fill"></div></div>
+      <div class="meta-questao">
+        <span id="q-num" class="rotulo-mono"></span>
+        <span id="q-nivel" class="etiqueta"></span>
+        <span id="q-placar" class="rotulo-mono placar"></span>
       </div>
 
-      <div class="question-card" id="questionCard">
-        <div class="question-card__loading" id="questionLoading">
-          <span class="spinner"></span>
-          <p id="loadingText">Lavrando o auto de questão…</p>
-        </div>
+      <div id="q-carregando" class="carregando hidden">
+        <div class="carimbo-anim" aria-hidden="true">LAVRANDO</div>
+        <p id="q-carregando-txt">Lavrando a próxima questão…</p>
+      </div>
 
-        <div id="questionContent" hidden>
-          <div class="question-meta">
-            <span class="meta-chip" id="metaDisciplina">—</span>
-            <span class="meta-chip" id="metaAssunto">—</span>
-            <span class="meta-chip meta-chip--level" id="metaNivel">—</span>
-            <span class="meta-chip meta-chip--origem" id="metaOrigem">—</span>
-          </div>
-
-          <div class="question-seal" id="questionSeal">Q. <span id="questionIndex">1</span></div>
-
-          <p class="question-enunciado" id="questionEnunciado"></p>
-
-          <div class="alternativas" id="alternativasContainer"></div>
-
-          <button id="btnResponder" class="btn-primary" disabled>Confirmar resposta</button>
-
-          <div class="feedback" id="feedbackPanel" hidden>
-            <div class="feedback__verdict" id="feedbackVerdict"></div>
-            <div class="feedback__block">
-              <h3>Análise das alternativas</h3>
-              <ul id="feedbackAlternativas"></ul>
-            </div>
-            <div class="feedback__block">
-              <h3>A pegadinha</h3>
-              <p id="feedbackPegadinha"></p>
-            </div>
-            <div class="feedback__block">
-              <h3>Ponto de memorização</h3>
-              <p id="feedbackMemorizacao"></p>
-            </div>
-            <div class="feedback__block feedback__block--erro" id="feedbackCausaWrap" hidden>
-              <h3>Causa provável do erro</h3>
-              <p id="feedbackCausa">Apurando causa…</p>
-            </div>
-            <button id="btnProxima" class="btn-primary">Próxima questão →</button>
-          </div>
-        </div>
-
-        <div id="questionError" class="question-error" hidden>
-          <h3>Não foi possível gerar a questão</h3>
-          <p id="questionErrorMsg"></p>
-          <button id="btnTentarNovamente" class="btn-secondary">Tentar novamente</button>
+      <div id="q-erro" class="caixa-erro hidden" role="alert">
+        <strong>Não foi possível carregar a questão.</strong>
+        <p id="q-erro-msg"></p>
+        <div class="acoes">
+          <button type="button" id="btn-tentar" class="btn-primario">Tentar novamente</button>
+          <button type="button" id="btn-pular" class="btn-link">Trocar de assunto</button>
         </div>
       </div>
+
+      <article id="q-corpo" class="cartao-questao hidden">
+        <div class="cab-questao">
+          <span id="q-disc" class="rotulo-mono"></span>
+          <span id="q-assunto"></span>
+          <span id="q-origem" class="origem"></span>
+        </div>
+        <p id="q-aviso" class="aviso hidden"></p>
+        <p id="q-enunciado" class="enunciado"></p>
+        <ol id="q-alternativas" class="alternativas"></ol>
+        <div class="acoes">
+          <button type="button" id="btn-confirmar" class="btn-primario" disabled>Confirmar resposta</button>
+        </div>
+
+        <div id="q-feedback" class="feedback hidden">
+          <div id="q-resultado" class="resultado"></div>
+          <div class="nota pegadinha"><span class="rotulo-mono">Pegadinha</span><p id="q-pegadinha"></p></div>
+          <div class="nota memorizar"><span class="rotulo-mono">Para memorizar</span><p id="q-memorizar"></p></div>
+          <div id="q-causa" class="nota causa hidden"><span class="rotulo-mono">Causa provável do erro</span><div id="q-causa-txt"></div></div>
+          <div class="acoes">
+            <button type="button" id="btn-proxima" class="btn-primario">Próxima questão</button>
+          </div>
+        </div>
+      </article>
     </section>
 
-    <!-- TELA 3: RELATÓRIO -->
-    <section id="screen-report" class="screen" hidden>
-      <div class="dossier">
-        <p class="dossier__eyebrow">Encerramento do processo</p>
-        <h2>Relatório de auditoria de desempenho</h2>
-
-        <div class="report-summary">
-          <div class="report-summary__score">
-            <span id="reportScorePct">0%</span>
-            <small id="reportScoreFrac">0/0 acertos</small>
-          </div>
-          <p id="reportDiagnostico" class="report-diagnostico"></p>
-        </div>
-
-        <h3 class="report-heading">Desempenho por disciplina</h3>
-        <div id="reportPorDisciplina" class="ledger"></div>
-
-        <h3 class="report-heading">Mapa de erros por assunto</h3>
-        <div id="reportMapaErros" class="ledger ledger--erros"></div>
-
-        <div class="report-columns">
-          <div>
-            <h3 class="report-heading">Pontos fortes</h3>
-            <ul id="reportPontosFortes" class="bullet-list bullet-list--forte"></ul>
-          </div>
-          <div>
-            <h3 class="report-heading">Pontos fracos</h3>
-            <ul id="reportPontosFracos" class="bullet-list bullet-list--fraco"></ul>
-          </div>
-        </div>
-
-        <h3 class="report-heading">Plano de revisão</h3>
-        <div class="plano-revisao">
-          <div class="plano-revisao__item">
-            <span class="plano-revisao__label">Imediato</span>
-            <p id="planoImediato"></p>
-          </div>
-          <div class="plano-revisao__item">
-            <span class="plano-revisao__label">Próximos dias</span>
-            <p id="planoProximosDias"></p>
-          </div>
-          <div class="plano-revisao__item">
-            <span class="plano-revisao__label">Manutenção</span>
-            <p id="planoManutencao"></p>
-          </div>
-        </div>
-
-        <button id="btnNovoSimulado" class="btn-primary">Abrir novo processo</button>
+    <!-- ===================== TELA RELATÓRIO ===================== -->
+    <section id="tela-relatorio" class="tela hidden">
+      <div class="cabecalho-tela">
+        <span class="rotulo-mono">Balanço do simulado</span>
+        <h2>Relatório de desempenho</h2>
+      </div>
+      <div id="relatorio"></div>
+      <div class="acoes">
+        <button type="button" id="btn-novo" class="btn-primario">Novo simulado</button>
       </div>
     </section>
-
   </main>
-</div>
 
-<script src="app.js"></script>
+  <footer class="rodape">
+    Questões autorais geradas por IA. Confira sempre a legislação vigente e o edital do seu concurso.
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
